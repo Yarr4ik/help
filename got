@@ -1,0 +1,82 @@
+from monsters import NPCs
+import random
+
+class Player:
+    def __init__(self, name, health, damage):
+        self.name = name
+        self.health = health
+        self.damage = damage
+        self.score = 0
+
+    def take_damage(self, damage):
+        self.health -= damage
+
+    def attack(self, enemy):
+        enemy.take_damage(self.damage)
+
+    def is_alive(self):
+        return self.health > 0
+
+def enemy1():
+    return NPCs("Enemy: Pustinya", 100, "Watch out, here I come!")
+
+def enemy2():
+    return NPCs("Enemy: Rust", 750, "I HA HA HUI")
+
+def enemy3():
+    return NPCs("Enemy: Daria", 25, "Oh nooo +&/()&/&&%+*ç%")
+
+def met_enemy():
+    x = random.randint(1,3)
+    if x == 1:
+        return enemy1()
+    elif x == 2:
+        return enemy2()
+    elif x == 3:
+        return enemy3()
+
+while True:
+    player_name = input("Player name: ")
+    player_health = random.randint(75,150)
+    player_damage = random.randint(30,80)
+
+    player = Player(player_name, player_health, player_damage)
+
+    print(f"Your name is {player_name}, you have {player_health} HP and {player_damage} damage.")
+
+    choose = input("Enter 1 if you want to find adventures or enter 2 if you want to quit: ")
+
+    if choose == '1':
+        enemy = met_enemy()
+
+        while player.is_alive() and enemy.is_alive():
+            print(f"\nYou've encountered {enemy.get_name()} with {enemy.get_HP()} HP.")
+
+            enemy_damage = random.randint(20,50)
+            player.take_damage(enemy_damage)
+
+            print(f"{enemy.get_name()} attacked you for {enemy_damage} damage. You have {player.health} HP left.")
+
+            if not player.is_alive():
+                print("You died! Game Over.")
+                break
+
+            player.attack(enemy)
+
+            print(f"You attacked {enemy.get_name()} for {player_damage} damage. {enemy.get_name()} has {enemy.get_HP()} HP left.")
+
+            if not enemy.is_alive():
+                print(f"You defeated {enemy.get_name()}! Well done!")
+                player.score += 1
+                print(f"Your score: {player.score}")
+
+            continue_fight = input("\nWould you like to continue fighting (1) or run away (2)? ")
+            if continue_fight == '2':
+                print(f"You ran away. Your score: {player.score}")
+                break
+
+    elif choose == '2':
+        print(f"Game over. Your score: {player.score}")
+        break
+    else:
+        print("Invalid option. Please enter 1 or 2.")
